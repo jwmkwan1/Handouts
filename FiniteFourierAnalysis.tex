@@ -1,0 +1,947 @@
+\documentclass{scrartcl}
+
+\usepackage[sexy]{/Users/jeffrey/Documents/evan}
+
+\begin{document}
+
+\title{An Introduction to Finite Fourier Analysis}
+\author{Jeffrey Kwan}
+
+\maketitle
+
+\begin{abstract}
+	In this article, I attempt to motivate the classical roots of unity filter in the most natural 
+	way possible, which I believe is through finite Fourier analysis. 
+	I begin by introducing some basic theory in Finite Fourier Analysis, and apply the filter 
+	to some olympiad problems. Finally, I present an ``elementary" (meaning without the use of  
+	complex analysis) proof of the famous Dirichlet's theorem and apply it to some 
+	olympiad problems. I include some roots of unity filter problems at the end for further practice. 
+\end{abstract}
+
+\subsection*{Acknowledgements}
+
+Sections 1 and 3 follow the Finite Fourier Analysis section introduction in \emph{Straight from the Book}. 
+Here I have provided some additional explanation since SFTB is rather dense.  
+The ``elementary" proof of Dirichlet is from AMSP NT3.  
+
+\tableofcontents
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+
+\eject
+
+\section{Basics}
+
+You may recall the usual Fourier transform for a function $f: \RR \rightarrow \CC$, 
+defined by
+$$\widehat{f}(x) = \int_{-\infty}^{\infty} f(y) e^{-2\pi ixy} \, dy.$$
+Our goal will be to generalize the transform to maps $f: G\rightarrow \CC$, where $G$ 
+is a finite abelian group. 
+
+\subsection{Preliminaries}
+
+\begin{definition}
+	A \vocab{character} of $G$ is a morphism $\chi: G\rightarrow \CC^\ast$ that satisfies 
+	$$\chi(xy) = \chi(x)\cdot \chi(y)$$ 
+	for all $x, y\in G$. 
+	A character $\chi$ of $G$ is \vocab{trivial} if $\chi(g) = 1$ for all $g\in G$. 
+\end{definition}
+
+Note that if $e$ is the identity element in $G$, then $\chi (e) = 1$ for all characters $\chi$. 
+
+\begin{definition}
+	The set of all characters of $G$, denoted by $\widehat{G}$, is a group under multiplication. 
+	This group is called the \vocab{dual group} of $G$. 
+\end{definition}
+
+Suppose $|G|=n$. Then for all $\chi\in \widehat{G}$ and $g\in G$, we have 
+$$\chi (g)^n = \chi(g^n) = \chi (e) = 1,$$
+by Lagrange's theorem. In particular, $\chi(g)$ is always an $n$th root of unity. 
+
+\begin{example} [Cyclic Groups]
+	\label{ex:cyclic}
+	Consider the group $G = \ZZ/n\ZZ$ for some $n>1$ (with the operation being addition).
+	Since $1$ generates $G$, $\chi$ is uniquely determined by $\chi(1)$. 
+	In addition, if $z$ is an $n$th root of unity, $x\rightarrow z^x$ is a character of $G$. 
+	Therefore, we can deduce that $\widehat{G}$ is in fact isomorphic to $G$. 
+	
+	Clearly this analysis generalizes to all cyclic groups, so we can say that $\widehat{G}$ is 
+	isomorphic to $G$ for all cyclic groups $G$. 
+\end{example}
+
+If we are to generalize this result to all groups, we need the following powerful result.
+
+\begin{theorem}[Fundamental Theorem of Finite Abelian Groups]
+	Every finite abelian group can be expressed as the direct product of cyclic groups. 
+\end{theorem}
+
+All that remains is to observe that the dual of $G\times H$ is $\widehat{G}\times \widehat{H}$, 
+which is an easy exercise. Thus, we can conclude that for all finite abelian groups $G$, 
+$\widehat{G}$ is isomorphic to $G$. In particular, we get that $|G| = |\widehat{G}|$.
+Another important result is that for all $x\in G \setminus \{e\}$, there exists 
+some $\chi \in \widehat{G}$ such that $\chi(x)\neq 1$.  
+
+\subsection{Main Results}
+
+Next we will study some of the main results of Finite Fourier Analysis. 
+
+\begin{definition}
+	Let $F(G, \CC)$ be the $\CC$-vector space of all maps $: G\rightarrow \CC$. 
+	Note that $F$ has dimension $|G|$. 
+	
+	For $f, g\in F(G, \CC)$, define 
+	$$\langle f, g\rangle = \frac{1}{|G|} \sum_{x\in G}f(x) \overline{g(x)}.$$ 
+	One can easily verify that this is a valid inner product. 
+\end{definition}
+
+Now we are ready to prove the important theorems. 
+
+\begin{theorem}[Orthogonality Relations]
+	For all $\chi, \chi_1, \chi_2\in \widehat{G}$ and $g, h\in G$, we have 
+	\begin{align*}
+		\frac{1}{|G|}\sum_{x\in G} \chi_1(x)\overline{\chi_2(x)}&=1_{\chi_1=\chi_2}, \\
+		\frac{1}{|G|}\sum_{\chi\in \widehat{G}} \chi(g)\overline{\chi(h)} &= 1_{g=h}.
+	\end{align*}
+\end{theorem}
+
+\begin{proof}
+	We start by proving the first result. 
+	If $\chi_1=\chi_2$, then 
+	$$\frac{1}{|G|} \sum_{x\in G} \chi_1(x) \overline{\chi_2(x)}=\frac{1}{|G|}\sum_{x\in G} 1 = 1.$$
+	If $\chi_1 \neq \chi_2$, then the character $\chi = \frac{\chi_1}{\chi_2}$ is nontrivial. 
+	Thus we have
+	$$\frac{1}{|G|}\sum_{x\in G}\chi_1(x)\overline{\chi_2(x)} = \frac{1}{|G|} \sum_{x\in G} \chi (x).$$
+	Letting $S = \sum_{x\in G}\chi(x)$, we get 
+	$$\chi(g) S = \sum_{x\in g}\chi (gx) = \sum_{x\in G} \chi(x) = S$$ 
+	for all $g\in G$. However, $\chi$ is nontrivial, so there is some $g$ such that $\chi(g)\neq 1$. 
+	Therefore, $S=0$, which proves the first result. 
+	
+	The proof of the second result goes similarly. 
+	If $g=h$, then it's clear that the result holds. 
+	
+	If $g\neq h$, then let $x = \frac{g}{h}$. Clearly 
+	$$\frac{1}{|G|}\sum_{\chi \in \widehat{G}} \chi(g)\overline{\chi(h)} = 
+	\frac{1}{|G|} \sum_{\chi \in \widehat{G}} \chi(x),$$
+	so set $S = \sum_{\chi\in \widehat{G}} \chi(x)$. 
+	Now since $\widehat{G}$ is closed under multiplication, 
+	$$\chi_1 (x) S = \sum_{\chi\in \widehat{G}} \chi_1 (x)\cdot \chi(x) = \sum_{\chi \in \widehat{G}} \chi(x) = S$$
+	for all $\chi_1\in \widehat{G}$. 
+	But we know that there exists some $\chi_1$ such that $\chi_1(x)\neq 1$, so $S$ must be $0$. 
+\end{proof}
+
+In particular, this theorem implies that the set $\{\chi\}_{\chi \in \widehat{G}}$ forms an orthonormal basis 
+of $F(G, \CC)$. 
+
+Now let's define the Fourier transform of functions on finite groups. 
+
+\begin{definition}
+	For a map $f: G\rightarrow \CC$, the \vocab{Fourier coefficient} of $f$ with respect to a character 
+	$\chi$ is defined as 
+	$$\widehat{f}(\chi) = \langle f, \chi \rangle = \frac{1}{|G|} \sum_{x\in G} f(x) \overline{\chi(x)}.$$
+	The \vocab{Fourier series} of $f$ is defined as 
+	$$\mathcal{F}[f] = \sum_{\chi \in \widehat{G}} \widehat{f}(\chi)\chi.$$
+\end{definition}
+
+Now let's prove the theorem that tells us the transform actually gives a valid representation of $f$. 
+
+\begin{theorem}[Fourier Inversion]
+	For all $f\in F(G, \CC)$, 
+	$$f = \sum_{\chi \in \widehat{G}} \widehat{f}(\chi) \chi.$$
+\end{theorem}
+
+\begin{proof}
+	For all $x\in G$, we have 
+	\begin{align*}
+		\left(\sum_{\chi \in \widehat{G}} \widehat{f}(\chi)\chi\right)(x) 
+		&= \frac{1}{|G|} \sum_{\chi \in \widehat{G}} \left(\chi(x) \left(\sum_{y\in G}f(y)\overline{\chi(y)}\right)\right) \\
+		&= \frac{1}{|G|} \sum_{y\in G} f(y) \sum_{\chi \in \widehat{G}} \chi(x)\overline{\chi(y)} \\
+		&= \sum_{y\in G}f(y) 1_{x=y} = f(x)
+	\end{align*}
+	by the orthogonality relations. Thus, the Fourier series is a valid representation of $f$. 
+\end{proof}
+
+Finally, we prove a very useful identity, which is the equivalent of Parseval's relation for finite 
+abelian groups. 
+
+\begin{theorem}[Plancherel's Identity]
+	For all $f\in F(G, \CC)$, 
+	$$\frac{1}{|G|} \sum_{x\in G} |f(x)|^2 = \sum_{\chi \in \widehat{G}} |\widehat{f}(\chi)|^2.$$
+\end{theorem}
+
+\begin{proof}
+	Again, we can just write it out with Fourier inversion: 
+	\begin{align*}
+		\frac{1}{|G|} \sum_{x\in G}|f(x)|^2 = \langle f, f\rangle  &= 
+		\frac{1}{|G|} \sum_{x\in G}\left(\sum_{\chi_1\in \widehat{G}} \widehat{f}(\chi_1)\chi_1(x) \right) 
+		\overline{\left(\sum_{\chi_2\in \widehat{G}} \widehat{f}(\chi_2)\chi_2(x) \right)} \\
+		&= \sum_{\chi_1} \sum_{\chi_2} \left(\frac{1}{|G|} \sum_{x\in G} \chi_1(x)\overline{\chi_2(x)}\right) 
+		\widehat{f}(\chi_1)\overline{\widehat{f}(\chi_2)} \\
+		&= \sum_{\chi_1} \sum_{\chi_2} \langle \chi_1, \chi_2\rangle \cdot \widehat{f}(\chi_1)
+		\overline{\widehat{f}(\chi_2)} \\
+		&= \sum_{\chi \in \widehat{G}}|\widehat{f}(\chi)|^2,
+	\end{align*}
+	which proves the identity. 
+\end{proof}
+
+\begin{remark}
+	We can prove the generalization
+	$$\langle f, g\rangle  = \sum_{x\in \widehat{G}} \widehat{f}(\chi) \overline{\widehat{g}(\chi)}$$
+	with a similar argument. 
+\end{remark}
+
+\section{Roots of Unity Filter}
+
+In this section, we examine the case when $G = \ZZ/p\ZZ$, which 
+is really just a special case of \Cref{ex:cyclic}. 
+
+Often it is useful to use the orthogonality relations in the following form: 
+if $\chi$ is a nontrivial character of $G$, then  
+$$1_{a=b} = \frac{1}{|G|} \sum_{g\in G} \chi(g(a-b)).$$
+This holds since if $a\neq b$, the set $\{g(a-b)\}_{g\in G}$ is a permutation of 
+$\{g\}_{g\in G}$, so 
+$$\sum_{g\in G} \chi(g(a-b)) = \sum_{g\in G}\chi(g) = 0.$$
+Thus, we have 
+$$1_{x\equiv y\pmod p} = \frac{1}{p}\sum_{k=0}^{p-1} \zeta^{k(x-y)},$$
+where $\zeta$ is a primitive $p$th root of unity. 
+So the orthogonality relations just give us the classical roots of unity filter when 
+applied to $\ZZ/p\ZZ$!
+
+\subsection{Examples}
+
+Now let's see some examples of the roots of unity filter in action. 
+
+\begin{example}[Bulgaria TST 2006/6]
+	Let $p>2$ be a prime. Find the number of the subsets $B$ of the set 
+	$A=\{1,2,\ldots,p-1\}$ such that the sum of the elements of $B$ is divisible by $p$.
+\end{example}
+
+\begin{proof}
+	Let $\zeta$ be a primitive $p$th root of unity. 
+	Then by the roots of unity filter, the desired count is 
+	$$\frac{1}{p} \sum_{B\subseteq A} \sum_{k=0}^{p-1} \zeta^{k\sum_{b\in B} b}
+	= \frac{2^{p-1}}{p}+\frac{1}{p} \sum_{k=1}^{p-1}\sum_{B\subseteq A} \zeta^{k\sum_{b\in B} b}.$$
+	The key is that the inner summation can be factored as 
+	$$\sum_{B\subseteq A} \zeta^{k\sum_{b\in B} b} = (1+\zeta^k)(1+\zeta^{2k})\dots (1+\zeta^{(p-1)k}).$$
+	However, $\{k, 2k, \dots, (p-1)k\}$ is just a permutation of $\{1, 2, \dots, p-1\}$, so 
+	really our desired sum is 
+	$$\frac{2^{p-1}}{p}+\frac{p-1}{p}(1+\zeta)(1+\zeta^2)\dots(1+\zeta^{p-1}).$$
+	Now consider the polynomial 
+	$$f(x) = (x-\zeta)(x-\zeta^2) \dots (x-\zeta^{p-1}) = x^{p-1}+x^{p-2}+\dots+1.$$
+	Then 
+	$$(1+\zeta)(1+\zeta^2)\dots(1+\zeta^{p-1}) = (-1)^{p-1}f(-1) = 1,$$
+	so the desired count is $\frac{1}{p}(2^{p-1}+p-1)$. 
+\end{proof}
+
+The next example is much trickier, but the solution is rather technical. 
+
+\begin{example}[St. Petersburg 2003]
+	Let $p$ be a prime and let $n\ge p$ be a positive integer. 
+	In addition, let $a_1$, $a_2$, $\dots$, $a_n$ be arbitrary integers. 
+	Define $f_0=1$, and for $k\ge 1$ let $f_k$ be the number of subsets 
+	$I\subset \{1, 2, \dots, n\}$ such that $|I|=k$ and $p\mid \sum_{i\in I} a_i$. 
+	Prove that $p\mid f_0-f_1+\dots+(-1)^nf_n$.
+\end{example}
+
+\begin{proof}
+	Using the roots of unity filter, we get 
+	$$pf_k=\sum_{|I|=k}\sum_{j=0}^{p-1}\zeta^{j \sum_{i\in I} a_i}$$
+	where $\zeta$ is a primitive $p$th root of unity.
+	Plugging this in, we get
+	\begin{align*}
+	N = f_0-f_1+\dots+(-1)^nf_n &= 
+	1+\frac{1}{p}\left(\sum_{k=1}^n (-1)^k \sum_{|I|=k}\sum_{j=0}^{p-1} \zeta^{j\sum_{i\in I}a_i}\right) \\
+	&= 1+\frac{1}{p}\left(\sum_{k=1}^n (-1)^k\binom{n}{k}+
+	\sum_{j=1}^{p-1}\sum_{k=1}^n\sum_{|I|=k} (-1)^k\zeta^{j\sum_{i\in I}a_i}\right) \\
+	&= 1+\frac{1}{p}\left(-1+\sum_{j=1}^{p-1} \left[(1-\zeta^{ja_1})\dots(1-\zeta^{ja_n})-1\right] \right) \\
+	&= \frac{1}{p} \sum_{j=1}^{p-1}(1-\zeta^{ja_1})(1-\zeta^{ja_2})\dots(1-\zeta^{ja_n}).
+	\end{align*}
+	We're going to do some work with algebraic integers to show that $p\mid N$. 
+	
+	Let $A=\{f(\zeta)\mid f\in \mathbb{Z}[X]\}$ and $\xi=1-\zeta$.
+	Then $(1-\xi)^p=1$, so 
+	$$-p+\binom{p}{2}\xi+\dots-\xi^{p-1}=0.$$ 
+	Therefore we must have $\xi^{p-1}\in p\cdot A$.
+	Then factor 
+	$$(1-\zeta^{ja_1})\dots (1-\zeta^{ja_n})=(1-\zeta)^n Q(\zeta)\in \xi^n \cdot A.$$
+	Since $n\ge p$, $(1-\zeta^{ja_1})(1-\zeta^{ja_2})\dots(1-\zeta^{ja_n})\in p\xi \cdot A$ 
+	for all $j$, so $N\in \xi\cdot A$. 
+
+	The key idea is that $$N^{p-1}\in \xi^{p-1}\cdot A\in p\cdot A,$$ 
+	so we are done by the following claim.
+
+	\begin{claim*}
+		If $b\in \mathbb{Z}$ and $b=p\cdot c$ where $c\in A$, 
+    		then $b\in p\cdot \mathbb{Z}$.
+	\end{claim*}
+	\begin{proof}
+		Write $c=c_0+c_1\zeta+\dots+c_{p-2}\zeta^{p-2}$ (we don't need 
+		$\zeta^{p-1}$ since $\zeta^{p-1}=-(1+\zeta+\dots+\zeta^{p-2})$). 
+		Then we get $$b-pc_0-pc_1\zeta-\dots-pc_{p-2}\zeta^{p-2}=0.$$ But 
+		$$1+X+X^2+\dots+X^{p-1}$$ is the minimal polynomial of $\zeta$, so 
+		$b-p\cdot c_0=0$. This completes the proof of the lemma. 
+	\end{proof}
+
+	Therefore, by the claim we have $N\in p\cdot \mathbb{Z}$, so $p\mid N$ as desired. 
+\end{proof}
+
+Here is another nice example that is less technical than the previous result. 
+
+\begin{example}
+	Let $A$ be a finite set of integers, and let $f: A\rightarrow \ZZ/p\ZZ$ 
+	be a map. Prove that for any positive integer $k$, there exist at least 
+	$\frac{|A|^{2k}}{p}$ $(2k)$-tuples $(a_1, \dots, a_{2k})\in A^{2k}$ such that 
+	$$f(a_1)+f(a_2)+\dots+f(a_k) \equiv f(a_{k+1})+f(a_{k+2})+\dots+f(a_{2k}) \pmod p.$$
+\end{example}
+
+\begin{proof}
+	Let $N(j)$ be the number of $(2k)$-tuples such that 
+	$$f(a_1)+\dots+f(a_k)\equiv f(a_{k+1})+\dots+f(a_{2k})+j\pmod p.$$
+	Clearly $N(0)+N(1)+\dots+N(p-1)=|A|^{2k}$, so it suffices to show that 
+	$N(0)\ge N(j)$ for all $1\le j \le p-1$. 
+	
+	As usual, let $\zeta$ be a primitive $p$th root of unity. 
+	By the roots of unity filter, we have 
+	\begin{align*}
+		N(j) &= \frac{1}{p} \sum_{a_1, \dots, a_{2k}} \sum_{m=0}^{p-1} 
+		\zeta^{m(f(a_1)+\dots+f(a_k)-f(a_{k+1})-\dots-f(a_{2k})-j)} \\
+		&= \frac{1}{p} \sum_{m=0}^{p-1} \zeta^{-mj} \left(\sum_{a\in A}\zeta^{mf(a)}\right)^k\cdot 
+		\left(\sum_{a\in A}\zeta^{-mf(a)}\right)^k \\
+		&= \frac{1}{p}\sum_{m=0}^{p-1} \zeta^{-mj} \left | \sum_{a\in A} \zeta^{mf(a)}\right |^{2k} \\
+		&\le \frac{1}{p}\sum_{m=0}^{p-1} \left | \sum_{a\in A} \zeta^{mf(a)}\right |^{2k} = N(0)
+	\end{align*}
+	by the triangle inequality, so the proof is complete.
+\end{proof}
+
+The standard roots of unity filter is extremely useful in counting things divisible by a prime. 
+However, the more general orthogonality relations are more useful when working 
+modulo a composite number. 
+
+\subsection{Number of Solutions to a General Quadratic Congruence}
+
+Now we'll tackle the problem of computing the number of solutions to any quadratic congruence. 
+
+\begin{example}
+	Consider the function $f(x_1, \dots x_k)=a_1x_1^2+\dots+a_kx_k^2-b$. 
+	How many solutions $(x_1,\dots, x_k)$ in $\mathbb{Z}/p\mathbb{Z}^k$ 
+	satisfy $f(x_1, \dots, x_k)\equiv 0\pmod p$?
+\end{example}
+
+Let $\zeta=e^{2\pi i/p}$ be a primitive $p$th root of unity, and 
+let $N$ be the number of solutions. 
+By the classic roots of unity filter,
+$$p\cdot N = \sum_{x_1, \dots, x_k}\sum_{j=0}^{p-1} \zeta^{j f(x_1, \dots, x_k)} = 
+p^{k}+\sum_{j=1}^{p-1}\sum_{x_1, \dots, x_k}\zeta^{j f(x_1, \dots, x_n)}.$$
+The key is that for quadratic polynomials, we can factor:
+\begin{align*}
+	\sum_{x_1, \dots, x_k} \zeta^{j f(x_1, \dots, x_k)} &= \sum_{x_1, \dots, x_k} \zeta^{a_1x_1^2+\dots+a_kx_k^2-b} \\
+	&= \zeta^{-jb} \sum_{x_1, \dots, x_k} \zeta^{ja_1x_1^2}\cdot \ldots \cdot \zeta^{ja_kx_k^2} \\
+	&= \zeta^{-jb}\left(\sum_{x_1}\zeta^{ja_1x_1^2}\right)\ldots \left(\sum_{x_k}\zeta^{ja_kx_k^2}\right).
+\end{align*}
+
+\begin{definition}
+	Let the $n$th \vocab{Gauss sum} be defined as $$G(n)=\sum_{x=0}^{p-1} \zeta^{nx^2}.$$
+	For convenience, let $G=G(1)$.
+\end{definition}
+
+So using this notation, we have
+$$N=p^{k-1}+\frac{1}{p}\sum_{j=1}^{p-1} \zeta^{-jb}G(ja_1)\dots G(ja_k).$$
+Now we need some more information about Gauss sums.
+
+\begin{proposition}
+	If $p\nmid n$, then $G(n)=(\tfrac{n}{p})G$. Otherwise, $G(n)=p$.
+\end{proposition}
+
+\begin{proof}
+	If $p\mid n$, then $\zeta^{nx^2}=1$ for all $x$. Thus $G(n)=p$.
+
+	If $p\nmid n$, there are two cases. If $(\tfrac np)=1$, 
+	then $\{nx^2\}_{x=0}^{p-1}$ is a permutation of $\{x^2\}$ modulo $p$. Thus $G(n)=G$.
+
+	If $(\tfrac np)=-1$, then $\{nx^2\}$ is a permutation of the nonresidues modulo $p$, so
+	$$G(n)=2\sum_{r=0}^{p-1}\zeta^r - \sum_{x=0}^{p-1}\zeta^{x^2} = -G.$$
+	This proves the proposition.
+\end{proof}
+
+\begin{proposition}
+	We also have $G = \sum_{x=1}^{p-1}\left(\frac xp \right)\zeta^x$.
+\end{proposition}
+
+\begin{proof} 
+	From the definition, 
+	$$G=1+2\sum_{x\neq 0, \text{ QR}} \zeta^x.$$
+	The right-hand side is just
+	 $$-\sum_{x \text{ non-QR}}\zeta^x + \sum_{x\neq 0, \text { QR}} \zeta^x.$$
+	 So the proposition is equivalent to 
+	 $$1+\sum_{x \text{ non-QR}}\zeta^x+\sum_{x\neq 0, \text { QR}}\zeta^x=0,$$
+	 which is clear.
+\end{proof}
+
+Assume that $p\nmid a_1a_2\dots a_k$, since otherwise the problem could be reduced to less variables. 
+Then we get 
+$$G(ja_1)\dots G(ja_k)=\left(\frac{ja_1}p\right)G\cdot \ldots \cdot \left(\frac{ja_k}p\right)G=G^k\left(\frac jp\right)^k \left(\frac{a_1a_2\dots a_k}p\right).$$
+Thus, we combine everything together, giving
+$$N = p^{k-1}+\frac{1}{p}\left(\frac{a_1a_2\dots a_k}p\right) G^k \sum_{j=1}^{p-1}\zeta^{-jb}\left(\frac jb\right)^k.$$
+Now there are two cases.
+
+\subsubsection{Case 1: $k$ even}
+Then $$\sum_{j=1}^{p-1} \zeta^{-jb} = \begin{cases} -1 \qquad &\text{if } p\nmid b \\
+p-1 \qquad &\text{if } p\mid b.
+\end{cases}$$
+So if $p\nmid b$, we get $$N=p^{k-1}-\frac{1}{p}\left(\frac{a_1a_2\dots a_k}p\right)G^k.$$
+
+\subsubsection{Case 2: $k$ odd} 
+If we let $x=-jb$, then as $j$ ranges from $1$ to $p-1$, 
+$x$ will also range from $1$ to $p-1$ (assuming $p\nmid b$). 
+In addition, we have 
+$$\left(\frac jp\right)=\left(\frac{-\frac xb}p\right)=\left(\frac{-b}p\right)\left(\frac xp\right),$$
+so $$\sum_{j=1}^{p-1} \zeta^{-kb}\left(\frac jp\right) = \sum_{x=1}^{p-1}\zeta^{x}\left(\frac{-b}p\right)\left(\frac xp \right) = \left(\frac{-b}p\right)G.$$
+Thus, we get
+$$N = p^{k-1}+\frac{1}{p} G^{k+1} \left(\frac{-ba_1\dots a_k}{p}\right).$$
+Now it remains to evaluate $G^n$, for $n$ even.
+
+\begin{theorem}[Gauss]
+	We have $G^2 = p(-1)^{(p-1)/2}$.
+\end{theorem}
+
+\begin{proof}
+	First of all, we have 
+	$$\overline{G} = \sum_{x=1}^{p-1}\left(\frac xp\right) \zeta^{-x} = 
+	\sum_{x=1}^{p-1} \left(\frac{-x}p\right)\zeta^{x} = \left(\frac{-1}p\right) G.$$
+	In addition, we know
+	\begin{align*}
+		G\cdot \overline{G} = \left(\sum_{x=0}^{p-1}\zeta^{x^2}\right) \left(\sum_{y=0}^{p-1}\zeta^{-y^2}\right) 
+		&= \sum_{x, y} \zeta^{x^2-y^2} \\
+		&= \sum_{x, y} \zeta^{(x-y)(x+y)} \\
+		&= \sum_{u=0}^{p-1}\sum_{v=0}^{p-1} \zeta^{uv} = p.
+	\end{align*}
+	This completes the proof.
+\end{proof}
+
+\begin{remark}
+	Gauss later proved that if $G$ is the ``positive" square root -- that is, if 
+	$p\equiv 1\pmod 4$, then $G = \sqrt{p}$, and if $p\equiv 3\pmod 4$, then $G = i\sqrt{p}.$
+\end{remark}
+
+Hence for even $k$, we get
+$$N = p^{k-1}-\frac{1}{p}\left(\frac{a_1a_2\dots a_k}p\right)(G^2)^{k/2} = 
+p^{k-1}-\left(\frac{a_1a_2\dots a_k}p\right)p^{\frac{k-2}{2}}(-1)^{k/2}.$$
+For odd $k$, we get
+\begin{align*}
+	N &= p^{k-1}+\frac{1}{p}\left(\frac{-ba_1\dots a_k}{p}\right)(G^2)^{\frac{k+1}{2}} \\
+	&= p^{k-1}+\frac{1}{p}\left(\frac{-ba_1\dots a_k}{p}\right)\left((\tfrac{-1}{p})p\right)^{\frac{k+1}{2}} \\
+	&= p^{k-1}+\left(\frac{-ba_1\dots a_k}p\right) \left(\frac{-1}{p}\right)^{\frac{k+1}{2}} p^{\frac{k-1}{2}} \\
+	&= p^{k-1}+\left(\frac{ba_1\dots a_k}p\right) \left(p(-1)^{\frac{p-1}{2}}\right)^{\frac{k-1}{2}}.
+\end{align*}
+
+This demonstrates the true power of the roots of unity filter. 
+Now we can compute the number of solutions to any quadratic congruence in any number of variables!
+
+\section{Other Applications}
+
+\subsection{Extending to Composite Moduli}
+
+In this section, we explore the group $G = (\ZZ/N\ZZ)^\ast$, the group of invertible residue classes 
+modulo $N$. 
+
+\begin{definition}
+	A character of $G$ is called a \vocab{Dirichlet character modulo $N$}. 
+	Then we extend the character to be a function over $\ZZ$ by setting 
+	$$\chi(n) = 1_{\gcd(n, N)=1} \cdot \chi(\overline{n})$$ for all $n$.\footnote{
+	Here $\overline{n}$ is a residue class modulo $N$.}
+\end{definition}
+
+\begin{definition}
+	If $d\mid N$ and $\chi_d$ is a Dirichlet character modulo $d$, then $\chi_d$ becomes a 
+	character modulo $N$ by composing it with the map $(\ZZ/N\ZZ)^\ast \rightarrow (\ZZ/d\ZZ)^\ast$. 
+	A character modulo $N$ is \vocab{primitive} if it cannot be obtained in this way for any 
+	$d\mid N$ and character $\chi_d$. 
+	
+	An equivalent, but more useful, way of defining a primitive character is the following: 
+	a character is primitive if for all $d\mid N$, there exists some $n\equiv 1\pmod d$ such that 
+	$\gcd(n, N)=1$ and $\chi(n)\neq 1$. 
+\end{definition}
+
+Now let's look at an example that is pivotal in the proof of Dirichlet's theorem. 
+
+\begin{example}
+	Let $a$ be an integer so that $\gcd(a, N)=1$. Now let 
+	$f(n)=1_{n\equiv a\pmod N}$. Clearly, for all characters $\chi\in \widehat{G}$, 
+	$$\widehat{f}(\chi) = \frac{1}{|G|} \sum_{x\in G} f(x) \overline{\chi(x)} = \frac{1}{\varphi(n)}\overline{\chi(a)}.$$
+	Now by Fourier inversion, we get 
+	$$1_{n\equiv a\pmod N} = \frac{1}{\varphi(N)} \sum_{\chi\in \widehat{G}} \overline{\chi(a)} \chi(n).$$
+	It turns out that this equation is one of the keys to the proof of Dirichlet's theorem, 
+	which we'll see later on.  
+\end{example}
+
+\subsection{Fourier Coefficients of Dirichlet Characters}
+
+Next, we examine the Fourier coefficients of Dirichlet characters. 
+Previously, we used the notation $\widehat{f}(\chi)$ to denote the Fourier coefficients. 
+However, this notation fails when $f = \chi$, so we have to use a different notation. 
+We know the characters for $G = \ZZ/N\ZZ$, and they correspond with the elements of 
+$\ZZ/N\ZZ$ (as $a$ corresponds with the map $x\rightarrow e^{2\pi i ax/N}$). Thus, 
+so for all maps $f: \ZZ/N\ZZ\rightarrow \CC$, 
+we use the notation 
+$$\widehat{f}(r) = \frac{1}{N} \sum_{x\in G} f(x) e^{\frac{-2\pi i r x}{N}}$$
+for the Fourier coefficients. 
+
+Now we are ready to study the Fourier coefficients of Dirichlet characters in the next theorem. 
+
+\begin{theorem}
+	\label{thm:charcoeff}
+	Let $\chi$ be a Dirichlet character modulo $N$. 
+	\begin{enumerate}
+		\ii For all $a$ relatively prime to $N$, 
+		$$\widehat{\chi}(a) = \overline{\chi(a)} \widehat{\chi}(1).$$
+		\ii If $\chi$ is primitive, then $\widehat{\chi}(a)=0$ if $\gcd(a, N)>1$, and 
+		$$|\widehat{\chi}(a)| = \frac{1}{\sqrt{N}}$$ 
+		if $\gcd(a, N)=1$. 
+	\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+	For the first part, let $\zeta = e^{-2\pi i/N}$. 
+	Then 
+	$$\widehat{\chi}(a) = \frac{1}{N} \sum_{x\in G} \chi(x) \zeta^{ax},$$
+	so we can write 
+	$$\chi(a) \widehat{\chi}(a) = \frac{1}{N} \sum_{x\in G} \chi(ax) \zeta^{ax} = \frac{1}{N} \sum_{x\in G}\chi(x) \zeta^x
+	= \widehat{\chi}(1).$$
+	Thus, since $|\chi(a)=1|$, we get $\widehat{\chi}(a) = \overline{\chi(a)} \widehat{\chi}(1)$, as desired. 
+	
+	If $\gcd(a, N)>1$, then write $N = dv$ and $a = du$ with $d>1$ and $\gcd(u, v)=1$. 
+	Let $\zeta=e^{-2\pi iu/v}$ be a primitive $v$th root of unity so that 
+	\begin{align*}
+		\widehat{\chi}(a) &= \frac{1}{N}\sum_{j=0}^{N-1}\chi(j) \zeta^{j} \\
+		&= \frac{1}{N} \sum_{k=0}^{d-1} \sum_{j=0}^{v-1} \chi(j+kv) \zeta^j \\
+		&= \frac{1}{N} \sum_{j=0}^{v-1} \left(\sum_{k=0}^{d-1} \chi(j+kv)\right) \zeta^j. 
+	\end{align*}
+	Therefore it suffices to show that $S_j = \sum_{k=0}^{d-1} \chi(j+kv)=0$ for all $0\le j\le v-1$.
+	Here is where we use the fact that $\chi$ is primitive: there exists $n\equiv 1\pmod v$ such that 
+	$\gcd(n, N)=1$ and $\chi(n)\neq 1$, so 
+	$$\chi(n)S_j = \sum_{k=1}^{d-1} \chi(n(j+kv)) = \sum_{k=0}^{d-1}\chi(j+kv) = S_j.$$
+	Indeed, since $n\equiv 1\pmod v$, the set $\{n(j+kv)\}$ is a permutation of the set $\{j+kv\}$, 
+	so we can conclude that $S_j=0$ as desired. 
+	
+	Finally, we prove the second half of part 2. 
+	By Plancherel's identity, we have 
+	$$\sum_{a=0}^{N-1} |\widehat{\chi}(a)|^2 = \frac{1}{N}\sum_{x=0}^{N-1} |\chi(x)|^2 = \frac{\varphi(N)}{N}.$$ 
+	Applying part 1 to the left-hand side, we get 
+	$$\frac{\varphi(N)}{N} = \sum_{\gcd(a, N)=1} \left |\overline{\chi(a)} \widehat{\chi}(1)\right |^2 = 
+	|\widehat{\chi}(1)|^2 \varphi(N),$$
+	so $|\widehat{\chi}(1)|=\frac{1}{\sqrt{N}}$. 
+	Thus, since $|\chi(a)|=1$, we get the desired result from part 1 again. 
+\end{proof}
+
+Let's use this result to prove a fundamental bound in analytic number theory. 
+
+\begin{theorem}[P\'{o}lya-Vinogradov]
+	Let $\chi$ be a primitive character modulo $N$. Then for all positive integers $m$, $n$, 
+	we have 
+	$$\left |\sum_{m\le j<n} \chi(j)\right | \le \sqrt{N} \log N.$$
+\end{theorem}
+
+\begin{proof}
+	First, by Fourier inversion, we have 
+	$$\chi(j) = \sum_{\gcd(a, N)=1} \widehat{\chi}(a) \zeta^{aj},$$
+	where $\zeta = e^{2\pi i/N}$. 
+	Summing over $j$, we get 
+	$$\left | \sum_{m\le j<n} \chi(j)\right | =
+	\left | \sum_{\gcd(a, N)=1}\widehat{\chi}(a)\left(\sum_{m\le j<n} \zeta^{aj}\right)\right | 
+	= \left |\sum_{\gcd(a, N)=1}\widehat{\chi}(a) \cdot \frac{\zeta^{an}-\zeta^{am}}{\zeta^a-1}\right |$$
+	by the formula for a geometric series. 
+	By basic geometry, we can obtain that $|\zeta^a-1| = |2\sin \frac{\pi a}{N}|$ and $|\zeta^{an}-\zeta^{am}|\le 2$. 
+	Thus, by \Cref{thm:charcoeff} and the triangle inequality, we have 
+	$$\left |\sum_{m\le j<n} \chi(j)\right | \le \frac{1}{\sqrt{N}} \sum_{\gcd(a, N)=1} \frac{1}{|\sin \frac{\pi a}{N}|}
+	\le \frac{1}{\sqrt{N}} \sum_{a\le N} \frac{1}{|\sin \frac{\pi a}{N}|}.$$
+	
+	Clearly, we know $\sin x\ge \frac{2}{\pi} x$ for $0\le x\le \pi/2$ (by convexity, for example). 
+	For $a\le \frac{N}{2}$, apply this inequality for $x=\frac{\pi a}{N}$, and for $a\ge \frac{N}{2}$, apply it 
+	for $x=\frac{\pi(N-a)}{N}$. 
+	This gives 
+	$$\left |\sum_{m\le j<n} \chi(j)\right | \le \frac{1}{\sqrt{N}} \cdot 2\sum_{a\le N/2} \frac{N}{2a}
+	= \sqrt{N} \sum_{a\le N/2} \frac{1}{a} \le \sqrt{N}\log N,$$
+	which completes the proof. 
+\end{proof}
+
+\begin{remark}
+	It turns out that the P\'olya-Vinogradov inequality is quite strong. 
+	Schur actually proved that if $\chi$ is a primitive character modulo $N$, then 
+	$$\max_{M} \left | \sum_{n\le M} \chi(n)\right | >\frac{1}{2\pi} \sqrt{N}.$$
+\end{remark}
+
+An important consequence of P\'olya-Vinogradov is that 
+$$\left | \sum_{x=1}^m \left(\frac{x}{p}\right)\right| \le \sqrt{p}\log p,$$
+which follows since $\chi(n) = (\frac{n}{p})$ is a primitive Dirichlet character modulo $p$. 
+This result is quite nontrivial, even though it can be proven with ``elementary techniques." 
+
+\section{Dirichlet's Theorem}
+
+We are now ready to prove the famous Dirichlet's theorem. 
+
+\begin{theorem} [Dirichlet]
+	\label{thm:dirichlet}
+	Let $a$ and $N$ be relatively prime positive integers. 
+	Then there are infinitely many primes $p\equiv a\pmod N$. 
+\end{theorem}
+
+\subsection{Definitions}
+
+First, we have to define some useful functions. 
+
+\begin{definition}
+	The \vocab{$L$-function of the Dirichlet character $\chi$} is defined by 
+	$$L(s, \chi) = \sum_{n\ge 1} \frac{\chi(n)}{n^s}.$$
+\end{definition}
+
+\begin{definition}
+	The \vocab{Von Mangoldt} function is defined by
+	$$\Lambda(n) = \begin{cases}
+	\log p & \qquad \text{if there exists a prime }p \text{ and } k\ge 1 \text{ such that } n=p^k, \\
+	0 & \qquad \text{otherwise}. 
+	\end{cases}$$
+\end{definition}
+
+In addition, we will need the following useful summation trick. 
+
+\begin{theorem}[Abel's Identity and Inequality]
+	Let $a_1, a_2, \dots, a_n$ and $b_1, b_2, \dots, b_n$ be two sequences of complex numbers, 
+	and let $S_k = a_1+a_2+\dots+a_k$. 
+	Then $$a_1b_1+\dots+a_nb_n = S_1(b_1-b_2)+\dots+S_{n-1}(b_{n-1}-b_n)+S_nb_n$$
+	and 
+	$$|a_1b_1+\dots+a_nb_n| \le \max |S_k| (b_1-b_n)+|S_n||b_n|$$
+	if $b_1\ge b_2\ge \dots \ge b_n$.
+\end{theorem}
+
+\begin{proof}
+	The first part is obvious upon expansion, and the second part follows by the triangle inequality. 
+\end{proof}
+
+\subsection{Main Proof}
+
+Now we are ready to begin the proof. Fasten your seat belts, and get ready for a ride!
+
+\begin{proof}[Proof of \Cref{thm:dirichlet}]
+	Our goal will be to show that 
+	$$\sum_{\stackrel{p\le x}{p\equiv a \text{ (mod } N)}} \frac{\log p}{p} = \frac{1}{\varphi(N)} \log x + O(1).$$
+	The key value in the proof is $L(1, \chi)$. 
+	
+	\begin{claim}
+		If $\chi$ is nontrivial, then $L(1, \chi)$ converges. 
+	\end{claim}
+	
+	\begin{proof}
+		Let $S_n = \sum_{k=1}^n \chi(k)$. Then we can write 
+		\begin{align*}
+			\sum_{n\le x}\frac{\chi(n)}{n} &= \sum_{n\le x}\frac{S_n-S_{n-1}}{n} \\
+			&= \sum_{n\le x} \frac{S_n}{n} - \sum_{n\le x-1} \frac{S_n}{n+1} \\
+			&= \frac{S_x}{x}+\sum_{n\le x-1} \frac{S_n}{n(n+1)}.
+		\end{align*}
+		From our previous work, we know that $S_n$ is bounded, so 
+		$$\sum_{n\le x} \frac{\chi(n)}{n} \le O\left(\frac{1}{x}\right)+O\left(\sum_{n\le x-1}\frac{1}{n(n+1)}\right),$$
+		which is clearly finite. 
+	\end{proof}
+	
+	\begin{claim}
+		\label{clm:6}
+		There exists some constant $c>0$ such that 
+		$$\left | \sum_{n\le x}\frac{\chi(n)}{n} - L(1, \chi)\right | <\frac{c}{x}.$$
+	\end{claim}
+	
+	\begin{proof}
+		We can just write 
+		$$\left | \sum_{n\ge x+1} \frac{\chi(n)}{n} \right | = \left | \sum_{n>x} \frac{S_n}{n(n+1)}\right |<
+		c\left(\sum_{n>x} \frac{1}{n}-\frac{1}{n+1}\right) = \frac{c}{x},$$
+		which completes the proof. 
+	\end{proof}
+	
+	Recall that from Fourier inversion, we have 
+	$$1_{x\equiv a \pmod N} = \frac{1}{\varphi(N)}\sum_{\chi} \overline{\chi(a)} \chi(x).$$
+	Thus we can write 
+	\begin{align*}
+		\sum_{\stackrel{p\le x}{p\equiv a \text{ (mod } N)}} \frac{\log p}{p} 
+		&= \sum_{p\le x} \frac{\log p}{p} \left(\frac{1}{\varphi(N)} \sum_{\chi} \overline{\chi(a)} \chi(p)\right) \\
+		&= \frac{1}{\varphi(N)} \sum_{\chi} \overline{\chi(a)}\left(\sum_{p\le x}\frac{\chi(p)}{p}\log p\right).
+	\end{align*}
+	Now let $S_\chi(x) = \sum_{p\le x} \frac{\chi(p)}{p}\log p$. 
+	Then if $\chi$ is trivial, then $S_\chi(x) = \log x+O(1)$ by Merten's theorem.
+	
+	Thus, it suffices to show that $S_\chi(x)$ is bounded for all nontrivial $\chi$. 
+	Using the Von Mangoldt function, we get 
+	$$S_\chi(x) = \sum_{p\le x}\frac{\chi(p)}{p} \Lambda(p) = \sum_{n\le x} \frac{\chi(n)}{n}\Lambda(n)
+	-\sum_{\substack{p^k\le x \\ k\ge 2}} \frac{\chi(p^k)}{p^k}\log p.$$ 
+	
+	\begin{claim}
+		The sum 
+		$$\sum_{\substack{p^k\le x \\ k\ge 2}}\frac{\chi(p^k)}{p^k}\log p$$ 
+		is bounded. 
+	\end{claim}
+	
+	\begin{proof}
+		We have 
+		$$\sum_{\substack{p^k\le x \\ k\ge 2}}\frac{\chi(p^k)}{p^k}\log p\le 
+		\sum_{\substack{p^k\le x \\ k\ge 2}}\frac{\log p}{p^k} \le 
+		\sum_{p\le x} \log p\left(\frac{1}{p^2}+\frac{1}{p^3}+\dots\right)
+		= \sum_{p\le x} \frac{\log p}{p(p-1)},$$
+		which is bounded. 
+	\end{proof}
+	
+	Now, it suffices to show that $F_\chi(x) = \sum_{n\le x}\frac{\chi(n)}{n} \Lambda(n)$ is bounded 
+	when $\chi$ is nontrivial. 
+	It's clear from the definition of $\Lambda(n)$ that $\sum_{d\mid n}\Lambda(d) = \log n$, so by M\"obius 
+	inversion, 
+	\begin{align*}
+		\Lambda(n) &= \sum_{d\mid n}\mu(d)\log \left(\frac{n}{d}\right) \\
+		&= \sum_{d\mid n} \mu(d) \log\left(\frac{n}{x}\cdot \frac{x}{d}\right) \\
+		&= \log\left(\frac{n}{x}\right) \sum_{d\mid n} \mu(d)+\sum_{d\mid n}\mu(d)\log \left(\frac{x}{d}\right).
+	\end{align*}
+	But $\sum_{d\mid n}\mu(d) = 1_{n=1}$, so we have 
+	$$\Lambda(n) = -1_{n=1}\log x+\sum_{d\mid n}\mu(d)\log\left(\frac{x}{d}\right).$$
+	Plugging this formula back into $F_\chi(x)$, we get 
+	\begin{align*}
+		F_\chi(x) &= \sum_{n\le x} \frac{\chi(n)}{n}\left(-1_{n=1}\log x+
+		\sum_{d\mid n}\mu(d)\log \left(\frac{x}{d}\right)\right) \\
+		&= -\log x +\sum_{n\le x}\frac{\chi(n)}{n} \sum_{d\mid n}\mu(d)\log \left(\frac{x}{d}\right) \\
+		&= -\log x +\sum_{d\le x}\mu(d)\log \left(\frac{x}{d}\right)\left(\sum_{d\mid n\le x}\frac{\chi(n)}{n}\right).
+	\end{align*}
+	Using the substitution $k=\frac{n}{d}$ gives 
+	\begin{align*}
+	F_\chi(x) &= -\log x + \sum_{d\le x}\mu(d)\log\left(\frac{x}{d}\right)\frac{\chi(d)}{d} 
+	\left(\sum_{k\le \frac{x}{d}}\frac{\chi(k)}{k}\right)\\
+	&= -\log x+\sum_{d\le x}\mu(d)\frac{\chi(d)}{d}\left(L(1, \chi)+d\cdot O\left(\frac{1}{x}\right)\right)
+	\end{align*}
+	by \Cref{clm:6}.
+	
+	\begin{claim}
+		If $L(1, \chi)=0$, then $F_\chi(x)+\log x$ is bounded. 
+	\end{claim}
+	
+	\begin{proof}
+		If $L(1, \chi)=0$, we have
+		$$F_\chi(x) = -\log x+O\left(\frac{1}{x}\right) \sum_{d\le x}\mu(d)\chi(d)\log \left(\frac{x}{d}\right).$$
+		We also know that 
+		$$\frac{1}{x}\sum_{d\le x}\mu(d)\chi(d)\log \left(\frac{x}{d}\right) \le 
+		\frac{1}{x} \sum_{d\le x}\log \left(\frac{x}{d}\right) = \frac{x\log x-\log x!}{x},$$
+		which is bounded. Combining these two observations proves the claim. 
+	\end{proof}
+	
+	\begin{claim}
+		If $L(1, \chi)\neq 0$, then $F_\chi(x)$ is bounded. 
+	\end{claim}
+	
+	\begin{proof}
+		Let $s(x)=\sum_{n\le x}\frac{\chi(n)}{n}\log n$. Since $b_n=\frac{\log n}{n}$ is decreasing, 
+		$s(x)$ is bounded by Abel's inequality. 
+		But we have 
+		\begin{align*}
+			s(x)&=\sum_{n\le x}\frac{\chi(n)}{n}\left(\sum_{d\mid n}\Lambda(n)\right) \\
+			&= \sum_{d\le x} \Lambda(d)\left(\sum_{d\mid n\le x} \frac{\chi(n)}{n}\right) \\
+			&= \sum_{d\le x} \frac{\Lambda(d)\chi(d)}{d}\left(\sum_{k\le \frac{x}{d}} \frac{\chi(k)}{k}\right) \\
+			&= L(1, \chi)F_\chi(x)+O\left(\frac{1}{x}\right)\sum_{d\le x}\Lambda(d)\chi(d)
+		\end{align*}
+		by \Cref{clm:6}. In addition, we know 
+		\begin{align*}
+			\frac{1}{x}\sum_{d\le x} \Lambda(d)\chi(d) &\le \frac{1}{x}\sum_{d\le x}\Lambda(d) \\
+			&=\frac{1}{x}\sum_{p^k\le x}\log p \\
+			&< \frac{1}{x}\sum_{p\le x}(\log_p x)\log p \\
+			&= \frac{1}{x}\sum_{p\le x}\frac{\log x}{\log p}\log p = \frac{\pi(x)\log x}{x},
+		\end{align*}
+		which is bounded. Thus, $F_\chi(x)$ is bounded if $L(1, \chi)\neq 0$. 
+	\end{proof}
+	
+	Let $k$ be the number of Dirichlet characters such that $L(1, \chi)=0$. 
+	Notice that  
+	$$\sum_{\chi} F_\chi(x) = \sum_\chi \sum_{n\le x} \frac{\chi(n)}{n}\Lambda(n) = 
+	\sum_{n\le x}\frac{\Lambda(n)}{n}\left(\sum_\chi \chi(n)\right).$$
+	Since $\sum_\chi \chi(n)$ is either $0$ or $\varphi(N)$, we must have 
+	$\sum_{\chi} F_\chi(x)\ge 0$. 
+	
+	But we also know that $$\sum_\chi F_\chi(x) = \log x-k\log x+O(1),$$
+	where the first term comes from the trivial character. Thus $L(1, \chi)$ is 
+	$0$ for at most one character $\chi$. 
+	
+	Suppose that $k=1$ and $L(1, \chi)=0$. We will arrive at a contradiction. 
+	First off, we know that 
+	$$0=\overline{L(1, \chi)} = L(1, \overline{\chi})=0,$$ 
+	so $\chi = \overline{\chi}$. Therefore, $\chi$ only takes real values. 
+	The key is considering the polynomial 
+	$$f(x) = \sum_{n\ge 1}\frac{\chi(n)x^n}{1-x^n} = \sum_{n\ge 1}\chi(n)\left(\sum_{k\ge 1}x^{kn}\right)
+	=\sum_{d\ge 1}x^d\left(\sum_{k\mid d}\chi(k)\right).$$
+	Let $g(d) = \sum_{k\mid d}\chi(k)$, so that 
+	$$g(p^j) = \chi(1)+\chi(p)+\dots+\chi(p^j)=1$$
+	if $p\mid N$. Then 
+	$$f(x)\ge x^p+x^{p^2}+\dots,$$
+	which is clearly unbounded as $x$ approaches $1^-$.
+	
+	However, since $L(1, \chi)=0$, we have 
+	$$-f(x)=-f(x)+\frac{1}{1-x}L(1, \chi) = \sum_{n\ge 1}\chi(n) \left(-\frac{x^n}{1-x^n}+\frac{1}{n(1-x)}\right).$$
+	
+	\begin{claim}
+		The sequence $$b_n=\frac{-x^n}{1-x^n}+\frac{1}{n(1-x)}$$ 
+		is decreasing if $0<x<1$. 
+	\end{claim}
+	
+	\begin{proof}
+		The inequality $b_n\ge b_{n+1}$ is equivalent to 
+		$$\frac{1}{n(1-x)}-\frac{x^n}{1-x^n} \ge \frac{1}{(n+1)(1-x)}-\frac{x^{n+1}}{1-x^{n+1}}.$$
+		After some rearranging, this becomes 
+		$$\frac{1-x^n}{1-x}\cdot \frac{1-x^{n+1}}{1-x}\ge n(n+1)x^n,$$
+		which is true since 
+		\begin{align*}
+			(1+x+\dots+x^{n-1})(1+x+\dots+x^n)&
+			\ge \left(n\sqrt[n]{x^{(n-1)n/2}}\right)\left((n+1)\sqrt[n+1]{x^{n(n+1)/2}}\right) \\
+			&= n(n+1)x^{(2n-1)/2} \ge n(n+1)x^n.
+		\end{align*}
+		Thus, the sequence $(b_n)$ is decreasing if $0<x<1$. 
+	\end{proof}
+	Since the sequence $(b_n)$ is decreasing, we get that $-f(x)$ is bounded by Abel's inequality, 
+	which is a contradiction. 
+	Therefore, we can conclude that $k=0$ and $F_\chi(x)$ is bounded for all nontrivial $\chi$. 
+	This completes the proof of Dirichlet's theorem.
+\end{proof}
+
+\subsection{Applications of Dirichlet's Theorem}
+
+Now let's see a few examples of Dirichlet's theorem to olympiad style problems. 
+
+\begin{example}
+	Let $a$ be an integer, and let $N=10^{2018}$. 
+	Suppose that $a$ is a quadratic residue for all primes greater than $N$. 
+	Show that $a$ is a perfect square. 
+\end{example}
+
+\begin{proof}
+	Divide $a$ by all squares so that $a$ becomes squarefree. We will show that $a=1$. 
+	If $a>1$, then write $a = p_1p_2\dots p_k$. 
+	
+	By Dirichlet's theorem, choose a prime $p$ larger than $N$ that satisfies 
+	\begin{eqnarray*}
+		p &\equiv& 1 \pmod 4, \\
+		p &\equiv& x_1 \pmod {p_1}, \\
+		p &\equiv& 1 \pmod {p_2}, \\
+		p &\equiv& 1 \pmod {p_3}, \\
+		& \vdots & \\
+		p & \equiv& 1 \pmod {p_k},
+	\end{eqnarray*}
+	where $x_1$ is a quadratic nonresidue modulo $p_1$. 
+	By quadratic reciprocity, $p_2$, $p_3$, \dots, $p_k$ are quadratic residues modulo $p$, 
+	but $p_1$ is a nonresidue. Thus, $a$ is a nonresidue modulo $p$, which is a contradiction.  
+\end{proof}
+
+Here is another straightforward application of Dirichlet's theorem. 
+
+\begin{example}
+	Find all polynomials $f(n)$ with integer coefficients such that for all primes $p$, 
+	$f(p)$ is also prime. 
+\end{example}
+
+\begin{proof}
+	The answer is $f(n)=p$ for any prime $p$ and $f(n)=n$. 
+	Suppose that $f$ is nonconstant and different from the identity function. 
+	
+	Then we can find some prime $q$ such that $f(q)\neq q$ (which forces $\gcd(f(q), q)=1$). 
+	Observe that $$f(q)\mid f(k\cdot f(q)+q)$$ 
+	for all integers $k$. However, there are infinitely many primes of the form $k\cdot f(q)+q$ by 
+	Dirichlet. Thus, we can find some $k$ large enough so that $k\cdot f(q)+q$ is prime and 
+	$f(k\cdot f(q)+q)>f(q)$, which is a contradiction. Indeed, since $f$ is nonconstant, 
+	$f(x)\rightarrow \infty$ as $x\rightarrow \infty$, so such a selection exists.  
+	This completes the proof. 
+\end{proof}
+
+Finally, let's tackle a difficult problem from the Chinese team selection test. 
+
+\begin{example}[China TST 2018]
+	A number $n$ is \emph{interesting} if 2018 divides $d(n)$, the number of 
+	positive divisors of $n$. 
+	Determine all positive integers $k$ such that there exists an infinite arithmetic progression 
+	with common difference $k$ whose terms are all interesting.
+\end{example}
+
+\begin{proof}
+	We claim that the answer is all $k$ such that $\nu_p(k)\ge 1009$ for some prime $p$, 
+	except for $k=2^{1009}$. 
+	
+	\begin{definition*}
+		Call an integer $k$ \emph{good} if it satisfies the condition of the problem. 
+		All other $k$ are \emph{bad}. 
+	\end{definition*}
+	
+	First, we prove that all such $k$ as described above are good. 
+	Observe that if $k$ is good, then all multiples of $k$ are good. Thus, 
+	we only need to prove that $k=p^{1009}$ and 
+	$k=c\cdot 2^{1009}$ with $p$ an odd prime and $c>1$ are good.
+	\begin{itemize}
+		\ii If $p>2$, then consider the arithmetic progression 
+		$$x\equiv p^{1008}\cdot r \pmod{p^{1009}},$$
+		where $r$ is a quadratic nonresidue modulo $p$. 
+		Clearly all $\nu_p(x)=1008$, and $x$ is not a square by the choice of $r$. 
+		Thus, $x$ must be interesting. 
+		\ii If $q$ is an odd prime, then take
+		$$x\equiv 2^{1008} \cdot r \pmod{2^{1009}\cdot q},$$
+		where $r$ is an odd nonresidue modulo $q$. 
+		It is clear that $x$ is interesting from the same reasoning as before. 
+		\ii Finally, for $k=2^{1010}$, we can take 
+		$$x\equiv 3\cdot 2^{1008} \pmod {2^{1010}}$$
+		since there are no squares congruent to $3$ modulo $4$. 
+	\end{itemize} 
+	This concludes the proof of the first direction. 
+	
+	Now we claim that if $\nu_p(k)\le 1008$ for all primes $p$, then $k$ is bad. 
+	It suffices to show that there are arbitrarily large uninteresting numbers in each 
+	residue class modulo $k$. 
+\end{proof}
+
+\section{Practice with Roots of Unity}
+
+Here are some problems that use the roots of unity filter. Not all of them apply 
+the filter directly, so be careful! 
+
+\begin{problem}[PUMaC Live Round 2018]
+	Let $0\le a, b, c, d\le 10$. For how many ordered quadruples $(a, b, c, d)$ is $ad-bc$ a multiple of $11$?
+\end{problem}
+
+\begin{problem}[Online Math Open 2017]
+	For an integer $k$ let $T_k$ denote the number of $k$-tuples of integers $(x_1,x_2,...x_k)$ 
+	with $0\le x_i < 73$ for each $i$, such that $73\mid x_1^2+x_2^2+...+x_k^2-1$. 
+	Compute the remainder when $T_1+T_2+...+T_{2017}$ is divided by $2017$.
+\end{problem}
+
+\begin{problem}[IMO 1995]
+	Let $p$ be an odd prime number. How many $p$-element subsets $A$ of $\{1,2,\dots,2p\}$ 
+	are there, the sum of whose elements is divisible by $p$?
+\end{problem}
+
+\begin{problem}[Shortlist 2002]
+	Let $m,n \geq 2$ be positive integers, and let $a_1,a_2,\ldots ,a_n$ be integers, 
+	none of which is a multiple of $m^{n-1}$. 
+	Show that there exist integers $e_1,e_2,\dots,e_n$, not all zero, with 
+	$|e_i|<m$ for all $i$, such that 
+	$e_1a_1+e_2a_2+\dots+e_na_n$ is a multiple of $m^n$.
+\end{problem}
+
+\begin{problem}
+	Let $p>2$ be a prime number and $n$ a positive integer. Find the number of 
+	$2n$-tuples $(x_1, x_2,\dots, x_{2n})$ of integers from $0$ to $p-1$ such that 
+	$$x_1^2+\dots+x_n^2 \equiv x_{n+1}^2+\dots+x_{2n}^2 \pmod p.$$
+\end{problem}
+
+\begin{problem}[AMM]
+	Let $p$ be an odd prime. Prove that the $2^{\frac{p-1}{2}}$ numbers $\pm 1 \pm 2 \pm \dots \pm \frac{p-1}{2}$ 
+	represent each nonzero residue class modulo $p$ the same number of times. 
+	Compute this number. 
+\end{problem}
+
+\begin{problem}[China TST 2010]
+	Each element of the set $M=\{1, 2, \dots, n\}$ is colored in one of three colors. 
+	Let $A$ be the set of triples $(x, y, z)$ of elements of $M$ such that $n\mid x+y+z$ 
+	and $x$, $y$, $z$ are the same color. 
+	Let $B$ be the set of triples $(x, y, z)$ of elements of $M$ such that $n\mid x+y+z$ 
+	and $x$, $y$, $z$ are pairwise distinct colors. 
+	Prove that $2|A|\ge |B|$. 
+\end{problem}
+
+\begin{problem}
+	Let $p$ be a prime and let $n$, $s$ be positive integers. Prove that $p^q$ divides
+	$$\sum_{\substack{0 \leq k \leq n\\ p \mid k-s}} (-1)^k \binom{n}{k},$$
+	where $q= \lfloor{\frac{n-1}{p-1}}\rfloor$.
+\end{problem}
+
+\end{document}
